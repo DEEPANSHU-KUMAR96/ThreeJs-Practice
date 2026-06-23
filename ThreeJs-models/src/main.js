@@ -40,24 +40,24 @@ envMap.load('./envMap.hdr', (envMap) => {
 // GLTF loader
 const gltfLoader = new GLTFLoader(); // create GLTF loader
 
-let mixer;
+// let mixer;
 
-gltfLoader.load('./robot.glb', (gltf) => {
+// gltfLoader.load('./robot.glb', (gltf) => {
 
-  const model = gltf.scene; // get gltf model
-  model.position.y = -3;
+//   const model = gltf.scene; // get gltf model
+//   model.position.y = -3;
 
-   mixer = new THREE.AnimationMixer(model); // create animation mixer
+//    mixer = new THREE.AnimationMixer(model); // create animation mixer
 
-  const action = mixer.clipAction(gltf.animations[1]); // get animation action
+//   const action = mixer.clipAction(gltf.animations[1]); // get animation action
 
-  action.play();
+//   action.play();
 
-  console.log(gltf.animations);
+//   console.log(gltf.animations);
 
-  scene.add(model); // add model to scene
+//   scene.add(model); // add model to scene
 
-})
+// })
 
 
 //Camara
@@ -101,13 +101,39 @@ const geometry = new THREE.BoxGeometry(1, 1, 1) // width, height, depth
 const material = new THREE.MeshStandardMaterial({
   color: "red",
   metalness: 0.9,
-  roughness: 0.001,
+  roughness: 0.01,
   // map: texture
 })
 
 const cube = new THREE.Mesh(geometry, material)
 
-// scene.add(cube) // add mesh to scene
+// raycaster object to detect click on mesh 
+const raycaster = new THREE.Raycaster();
+
+// mouse object to detect mouse position 
+const mouse = new THREE.Vector2();
+
+// add event listener to detect mouse move 
+window.addEventListener('mousemove', (e) => {
+  mouse.x = (e.clientX / size.width) * 2 - 1;
+  mouse.y = -((e.clientY / size.height) * 2 - 1);
+
+})
+scene.add(cube) // add mesh to scene 
+
+window.addEventListener('click', () => {
+
+  raycaster.setFromCamera(mouse, camera); // set raycaster from mouse and camera 
+
+  const intersects = raycaster.intersectObjects([cube]); // get intersects from raycaster 
+
+  if (intersects.length > 0) {
+    cube.material.color.set('green')
+  }
+
+  console.log(intersects);
+})
+
 
 
 //canvas
@@ -137,7 +163,7 @@ const animate = () => {
 
   cube.rotation.y = delta * 0.8; // rotate mesh on y axis
 
-  if(mixer) mixer.update(delta * 0.01);
+  // if(mixer) mixer.update(delta * 0.01);
 
   controls.update(); // update mouse controls
 
