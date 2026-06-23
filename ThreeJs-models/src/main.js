@@ -2,6 +2,7 @@ import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 
 const size = {
@@ -35,6 +36,29 @@ envMap.load('./envMap.hdr', (envMap) => {
   scene.background = envMap; // set scene background
   scene.environment = envMap; // set scene environment
 });
+
+// GLTF loader
+const gltfLoader = new GLTFLoader(); // create GLTF loader
+
+let mixer;
+
+gltfLoader.load('./robot.glb', (gltf) => {
+
+  const model = gltf.scene; // get gltf model
+  model.position.y = -3;
+
+   mixer = new THREE.AnimationMixer(model); // create animation mixer
+
+  const action = mixer.clipAction(gltf.animations[1]); // get animation action
+
+  action.play();
+
+  console.log(gltf.animations);
+
+  scene.add(model); // add model to scene
+
+})
+
 
 //Camara
 const camera = new THREE.PerspectiveCamera(
@@ -77,13 +101,13 @@ const geometry = new THREE.BoxGeometry(1, 1, 1) // width, height, depth
 const material = new THREE.MeshStandardMaterial({
   color: "red",
   metalness: 0.9,
-  roughness: 0.01,
+  roughness: 0.001,
   // map: texture
 })
 
 const cube = new THREE.Mesh(geometry, material)
 
-scene.add(cube) // add mesh to scene
+// scene.add(cube) // add mesh to scene
 
 
 //canvas
@@ -108,9 +132,12 @@ window.addEventListener('resize', () => {
 })
 const animate = () => {
 
-  const delta = clock.getElapsedTime();
+  const delta = clock.getElapsedTime(); // get elapsed time
+
 
   cube.rotation.y = delta * 0.8; // rotate mesh on y axis
+
+  if(mixer) mixer.update(delta * 0.01);
 
   controls.update(); // update mouse controls
 
