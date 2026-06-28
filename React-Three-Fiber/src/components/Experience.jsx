@@ -20,7 +20,7 @@ const Experience = () => {
 
     // model use
 
-    const {scene} = useGLTF('./model.glb')
+    const { scene } = useGLTF('./model.glb')
 
 
 
@@ -36,7 +36,7 @@ const Experience = () => {
                 <meshBasicMaterial color={'red'} />
             </mesh> */}
 
-                {/* <mesh ref={cubeRef}> 
+            {/* <mesh ref={cubeRef}> 
 
                 <boxGeometry args={[3, 3, 1]} /> // width, height, depth
 
@@ -44,7 +44,7 @@ const Experience = () => {
             </mesh> */}
 
 
-              {/* <mesh ref={cubeRef}> 
+            {/* <mesh ref={cubeRef}> 
 
                 <boxGeometry args={[3, 3, 1]} /> // width, height, depth
 
@@ -52,7 +52,7 @@ const Experience = () => {
             </mesh> */}
 
             // for model
-             <ambientLight intensity={3} color={'white'} />
+            <ambientLight intensity={3} color={'white'} />
             <primitive object={scene} position={[0, -2, 0]} />
         </>
     )
